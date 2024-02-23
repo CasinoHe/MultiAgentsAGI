@@ -1,3 +1,6 @@
 [submodule "lib/autogen"]
 	path = lib/autogen
 	url = https://github.com/CasinoHe/autogen.git
+[submodule "lib/autogen-agi"]
+	path = lib/autogen-agi
+	url = https://github.com/metamind-ai/autogen-agi.git
