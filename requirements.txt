@@ -1,0 +1,11 @@
+pydantic
+termcolor
+python-dotenv
+FLAML
+diskcache
+Pillow
+openai
+tiktoken
+# openai==1.10
+# tiktoken==0.5.2
+# google-generativeai==0.3.2
