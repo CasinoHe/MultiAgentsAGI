@@ -4,6 +4,7 @@ python-dotenv
 FLAML
 diskcache
 Pillow
+docker
 openai
 tiktoken
 # openai==1.10
