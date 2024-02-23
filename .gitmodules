@@ -1,0 +1,3 @@
+[submodule "lib/autogen"]
+	path = lib/autogen
+	url = https://github.com/microsoft/autogen.git
