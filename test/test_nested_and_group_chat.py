@@ -102,35 +102,37 @@ creative_solution_agent = autogen.AssistantAgent(
     name="CreativeSolutionAgent",
     system_message=prompts.creative_solution_expert.CREATIVE_SOLUTION_AGENT_SYSTEM_PROMPT_V1,
     llm_config=llm_config_dict,
-    description="",
+    # description="An expert at generating innovative, unconventional solutions, they excel in creative thinking and proposing unique, feasible ideas. Their role involves thinking outside the box, embracing complex challenges, collaborating for refined solutions, and inspiring others to expand their creative thinking.",
+    description="An expert in innovative solutions who inspires others with unique, feasible ideas, fostering collaboration and unconventional approaches."
 )
 
 first_principles_thinker_agent = autogen.AssistantAgent(
     name="FirstPrinciplesThinkerAgent",
     system_message=prompts.first_principle_thinker.FIRST_PRINCIPLES_THINKER_SYSTEM_PROMPT_V1,
     llm_config=llm_config_dict,
-    description="",
+    description="An expert in first principles thinking, adept at dissecting and solving complex problems from the ground up, focusing on fundamental truths and innovative, assumption-free solutions applicable across various domains.",
+    # description="An expert in first principles thinking, skilled in simplifying complex problems and creating innovative, versatile solutions."
 )
 
 project_manager_agent = autogen.AssistantAgent(
     name="ProjectManagerAgent",
     system_message=prompts.project_manager.PROJECT_MANAGER_SYSTEM_PROMPT_V1,
     llm_config=llm_config_dict,
-    description="",
+    description="As a Project Manager Agent, they excel in task coordination, resource allocation, risk management, clear communication, and meeting deadlines to efficiently achieve project goals.",
 )
 
 task_history_review_agent = autogen.AssistantAgent(
     name="TaskHistoryReviewAgent",
     system_message=prompts.task_historical_reviewer.TASK_HISTORY_REVIEW_AGENT_SYSTEM_PROMPT_V1,
     llm_config=llm_config_dict,
-    description="",
+    description="The Agent specializes in reviewing and succinctly summarizing a team's task history, focusing on key actions and identifying gaps to ensure the team stays on track.",
 )
 
 task_comprehension_agent = autogen.AssistantAgent(
     name="TaskComprehensionAgent",
     system_message=prompts.task_comprehension_expert.TASK_COMPREHENSION_AGENT_SYSTEM_PROMPT_V1,
     llm_config=llm_config_dict,
-    description="",
+    description="""The Agent expertly guides the team in task comprehension and knowledge limitations, frequently clarifying task goals and consulting "ConsultArchiveAgent" for domain-specific insights when needed.""",
 )
 
 AGENT_TEAM = [
