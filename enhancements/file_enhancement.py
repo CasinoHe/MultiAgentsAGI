@@ -30,7 +30,12 @@ def read_directory_contents(directory_path: Annotated[str,
     return os.listdir(resolved_path)
 
 
-def read_multiple_files(file_paths):
+def read_multiple_files(file_paths: Annotated[str,
+                                              "A list of absolute or relative paths to the files. "]
+                        ):
+    """
+    Reads multiple files and returns the contents.
+    """
     resolved_paths = [os.path.abspath(os.path.normpath(file_path)) for file_path in file_paths]
     file_contents = []
     for resolved_path in resolved_paths:
@@ -39,7 +44,14 @@ def read_multiple_files(file_paths):
     return file_contents
 
 
-def save_file(file_path, file_contents):
+def save_file(file_path: Annotated[str,
+                                   "The absolute or relative path to the file."],
+              file_contents: Annotated[str,
+                                       "The contents of the file to be saved."]
+              ):
+    """
+    Saves a file to disk.
+    """
     resolved_path = os.path.abspath(os.path.normpath(file_path))
     # Throw error if file already exists
     if os.path.exists(resolved_path):
@@ -56,7 +68,14 @@ def save_file(file_path, file_contents):
     return f"File saved to {resolved_path}."
 
 
-def save_multiple_files(file_paths, file_contents):
+def save_multiple_files(file_paths: Annotated[str,
+                                              "A list of absolute or relative paths to the files."],
+                        file_contents: Annotated[str,
+                                                 "A list of the contents of the files to be saved."]
+                        ):
+    """
+    Saves multiple files to disk.
+    """
     resolved_paths = [os.path.abspath(os.path.normpath(file_path)) for file_path in file_paths]
     # Throw error if file already exists
     for resolved_path in resolved_paths:
