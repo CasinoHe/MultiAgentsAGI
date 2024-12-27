@@ -15,4 +15,12 @@ typing-extensions
 opentelemetry-api
 asyncio_atexit
 jsonref
+playwright
+markitdown
+opencv-python
+ffmpeg-python
+azure-core
+azure-identity
+langchain_core
+# openai-whisper
 # google-generativeai==0.3.2
