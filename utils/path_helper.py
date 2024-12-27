@@ -35,9 +35,11 @@ def ensure_agentchat() -> None:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", agentchat_path])
 
 
-def ensure_ext() -> None:
+def ensure_ext(submodules=None) -> None:
     """
-    Check if the ext module (autogen-ext) is installed. If not, install it.
+    Check if the ext module (autogen-ext) is installed. If not, install it along with optional submodules.
+
+    :param submodules: List of optional submodules to install (e.g., ["openai", "langchain"]).
     """
     ext_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "lib", "autogen", "python", "packages", "autogen-ext")
@@ -46,13 +48,20 @@ def ensure_ext() -> None:
         __import__("autogen_ext")
     except ImportError:
         print("Installing autogen-ext...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", ext_path])
+        if submodules:
+            extras = ",".join(submodules)
+            install_command = f"pip install -e '{ext_path}[{extras}]'"
+        else:
+            install_command = f"pip install -e '{ext_path}'"
+        subprocess.check_call([sys.executable, "-m"] + install_command.split())
 
 
-def ensure_all() -> None:
+def ensure_all(submodules=None) -> None:
     """
-    Ensure all the modules are installed
+    Ensure all the modules are installed, including optional submodules for autogen-ext.
+
+    :param submodules: List of optional submodules to install for autogen-ext.
     """
     ensure_core()
     ensure_agentchat()
-    ensure_ext()
+    ensure_ext(submodules=submodules)
