@@ -17,12 +17,12 @@ class ArgParser(object):
                                               formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         self.subparser = self.parser.add_subparsers(dest="Commands", help="Run specific commands")
 
-        self.add_test_subparser()
         self.add_setup_subparser()
+        self.add_test_subparser()
 
     def add_test_subparser(self):
-        parser = self.subparser.add_parser(TEST_COMMAND, help=f"example: python main.py {TEST_COMMAND} --filename two_agents")
-        parser.add_argument("-f", "--filename", type=str, required=True, help="The filename of the test script under the test folder, for example: two_agents")
+        parser = self.subparser.add_parser(TEST_COMMAND, help=f"example: python main.py {TEST_COMMAND} -f weather_agent")
+        parser.add_argument("-f", "--filename", type=str, required=True, help="The filename of the test script under the test folder, for example: weather_agent")
         parser.add_argument("--without_autogen_ext", action="store_true", default=False, help="Run the test without autogen-ext")
         parser.add_argument("--without_openai", action="store_true", default=False, help="Run the test without OpenAI API")
         parser.add_argument("--openai_key", type=str, default="", help="OpenAI API key")
