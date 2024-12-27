@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/python:3.12
+FROM mcr.microsoft.com/vscode/devcontainers/python:3.13
 
 #
 # Update the OS and maybe install packages
