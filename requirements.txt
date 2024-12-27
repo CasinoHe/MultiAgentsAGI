@@ -6,8 +6,13 @@ diskcache
 Pillow
 docker
 openai
+aioconsole
+aiohttp
 tiktoken
+protobuf
 google-api-python-client
-# openai==1.10
-# tiktoken==0.5.2
+typing-extensions
+opentelemetry-api
+asyncio_atexit
+jsonref
 # google-generativeai==0.3.2
