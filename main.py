@@ -1,37 +1,64 @@
 import argparse
 import os
+import sys
 import importlib
+from utils import path_helper
 
 
-COMMAND_DESCRIPTION = """Run Multi-Agents AGI
-
-    example:
-        python main.py --run_type test --filename test_two_agents  # run the test_two_agents.py under the test folder
-"""
+TEST_COMMAND = "test"
+SETUP_COMMAND = "setup"
 
 
-def init_autogen_environment():
-    from utils import path_helper
-    path_helper.add_third_party_libraries_to_sys_path()
+class ArgParser(object):
+    def __init__(self, args):
+        self.args = args
+
+        self.parser = argparse.ArgumentParser(description="Run Multi-Agents AGI",
+                                              formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        self.subparser = self.parser.add_subparsers(dest="Commands", help="Run specific commands")
+
+        self.add_test_subparser()
+        self.add_setup_subparser()
+
+    def add_test_subparser(self):
+        parser = self.subparser.add_parser(TEST_COMMAND, help=f"example: python main.py {TEST_COMMAND} --filename two_agents")
+        parser.add_argument("-f", "--filename", type=str, required=True, help="The filename of the test script under the test folder, for example: two_agents")
+        parser.add_argument("--without_autogen_ext", action="store_true", default=False, help="Run the test without autogen-ext")
+        parser.add_argument("--without_openai", action="store_true", default=False, help="Run the test without OpenAI API")
+
+    def add_setup_subparser(self):
+        parser = self.subparser.add_parser(SETUP_COMMAND, help="Set up individual modules for AutoGen")
+        parser.add_argument("--without_core", action="store_true", default=False, help="Ensure autogen-core is installed")
+        parser.add_argument("--without_agentchat", action="store_true", default=False, help="Ensure autogen-agentchat is installed")
+        parser.add_argument("--without_ext", action="store_true", default=False, help="Ensure autogen-ext is installed")
+
+    def __call__(self, *args, **kwds):
+        args = self.parser.parse_args(self.args, **kwds)
+        return args
 
 
-def test(**kwargs):
+def install_autogen_environment(args):
+    path_helper.ensure_core()
+    path_helper.ensure_agentchat()
+
+    if not args.without_autogen_ext:
+        path_helper.ensure_ext()
+
+
+def setup_modules(args):
+    if not args.without_core:
+        path_helper.ensure_core()
+    if not args.without_agentchat:
+        path_helper.ensure_agentchat()
+    if not args.without_ext:
+        path_helper.ensure_ext()
+
+
+def test(args):
     """
     Starting test under the test directory simply by running the script directly
     """
-    # parse the arguments, and give the example of how to use the script
-    parser = argparse.ArgumentParser(description=COMMAND_DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-f", "--filename", type=str, default="", help="The filename of the test script under the test folder, for example: test_two_agents")
-
-    args_list = sum([[f"--{k}", v] for k, v in kwargs.items()], [])
-    # parse the arguments from kwargs
-    args, unknown = parser.parse_known_args(args_list)
-
     filename = args.filename
-    # print help msg
-    if not filename:
-        parser.print_help()
-        return 0
 
     # strip the ".py" extension and space
     filename = filename.strip().replace(".py", "")
@@ -41,50 +68,22 @@ def test(**kwargs):
 
     # load module from test folder, and run the module
     importlib.import_module(f".{filename}", package="test")
-    return 0
-
-
-def dry_run(**kwargs):
-    """
-    Placeholder, not implemented yet
-    """
-    print("Dry run is not implemented yet")
-
-
-VALIDATE_MODULE = {
-    "test": test,
-    "dry_run": dry_run,
-}
+    return True
 
 
 def main():
-    parser = argparse.ArgumentParser(description=COMMAND_DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
+    parser = ArgParser(args=sys.argv[1:])
+    args = parser()
 
-    # Add the first argument for run type
-    parser.add_argument("-t", "--run_type", choices=["test", "dry_run"], help="Type of run (test or dry_run)")
+    if args.Commands == "test":
+        install_autogen_environment(args)
+        test(args)
+    elif args.Commands == "setup":
+        setup_modules(args)
+    else:
+        parser.parser.print_help()
 
-    # Parse the arguments
-    args, unknown = parser.parse_known_args()
-
-    # The run type is stored in args.run_type
-    run_type = args.run_type
-
-    # Validate the run type
-    if run_type not in VALIDATE_MODULE:
-        raise ValueError(f"Invalid run type: {run_type}")
-
-    # Convert unknown arguments to kwargs (assuming they are in the format: --key value)
-    kwargs = {}
-    for i in range(0, len(unknown), 2):
-        key = unknown[i].lstrip("-")
-        value = unknown[i + 1] if i + 1 < len(unknown) else None
-        kwargs[key] = value
-
-    # init autogen environment
-    init_autogen_environment()
-
-    # Call the function with the kwargs
-    return VALIDATE_MODULE[run_type](**kwargs)
+    sys.exit(0)
 
 
 if __name__ == "__main__":

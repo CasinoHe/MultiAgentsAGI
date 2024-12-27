@@ -1,23 +1,58 @@
 """
-add third-party libraries to sys.path
+Ensure third-party libraries are installed and added to sys.path
 """
 
-import sys
 import os
+import sys
+import subprocess
 
 
-def add_third_party_libraries_to_sys_path() -> None:
-    root_dir = os.path.dirname(__file__)  # Use dirname instead of basename
-    autogen_dir = os.path.abspath(os.path.join(root_dir, "..", "lib", "autogen"))
-
+def ensure_core() -> None:
+    """
+    Check if the core module (autogen-core) is installed. If not, install it.
+    """
+    core_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "lib", "autogen", "python", "packages", "autogen-core")
+    )
     try:
-        # Find the index of autogen_dir in sys.path
-        index = sys.path.index(autogen_dir)
-        if index != 0:
-            # Move autogen_dir to the beginning if it's not already there
-            sys.path.insert(0, sys.path.pop(index))
-    except ValueError:
-        # Insert at the beginning if autogen_dir is not in sys.path
-        sys.path.insert(0, autogen_dir)
+        __import__("autogen_core")
+    except ImportError:
+        print("Installing autogen-core...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", core_path])
 
-    return None
+
+def ensure_agentchat() -> None:
+    """
+    Check if the agentchat module (autogen-agentchat) is installed. If not, install it.
+    """
+    agentchat_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "lib", "autogen", "python", "packages", "autogen-agentchat")
+    )
+    try:
+        __import__("autogen_agentchat")
+    except ImportError:
+        print("Installing autogen-agentchat...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", agentchat_path])
+
+
+def ensure_ext() -> None:
+    """
+    Check if the ext module (autogen-ext) is installed. If not, install it.
+    """
+    ext_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "lib", "autogen", "python", "packages", "autogen-ext")
+    )
+    try:
+        __import__("autogen_ext")
+    except ImportError:
+        print("Installing autogen-ext...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", ext_path])
+
+
+def ensure_all() -> None:
+    """
+    Ensure all the modules are installed
+    """
+    ensure_core()
+    ensure_agentchat()
+    ensure_ext()
