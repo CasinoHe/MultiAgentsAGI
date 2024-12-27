@@ -1,5 +1,8 @@
 import autogen  # type: ignore  the autogen path has been added in the main.py
 import prompts
+import json
+import os
+import sys
 from utils import ai_helper
 
 WORKING_DIR = "run_agi"
@@ -8,6 +11,15 @@ USE_DOCKER = False
 # Load LLM inference endpoints from an env variable or a file
 config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
 llm_config_dict = {"config_list": config_list}
+
+# Load other tools configurations from a json file, for example Google search api key
+if not os.path.exists("TOOLS_CONFIG.json"):
+    print("Please create a TOOLS_CONFIG.json file with the necessary API keys and other configurations.")
+    sys.exit(-1)
+
+tools_config = json.load(open("TOOLS_CONFIG.json"))
+google_api_key = tools_config.get("google_api_key")
+google_custom_search_id = tools_config.get("google_custom_search_id")
 
 
 # ---------------------------------------  Create a consult archive group chat ---------------------------------------

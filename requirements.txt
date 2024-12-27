@@ -7,6 +7,7 @@ Pillow
 docker
 openai
 tiktoken
+google-api-python-client
 # openai==1.10
 # tiktoken==0.5.2
 # google-generativeai==0.3.2
