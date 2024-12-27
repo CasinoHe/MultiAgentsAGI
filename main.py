@@ -25,6 +25,7 @@ class ArgParser(object):
         parser.add_argument("-f", "--filename", type=str, required=True, help="The filename of the test script under the test folder, for example: two_agents")
         parser.add_argument("--without_autogen_ext", action="store_true", default=False, help="Run the test without autogen-ext")
         parser.add_argument("--without_openai", action="store_true", default=False, help="Run the test without OpenAI API")
+        parser.add_argument("--openai_key", type=str, default="", help="OpenAI API key")
 
     def add_setup_subparser(self):
         parser = self.subparser.add_parser(SETUP_COMMAND, help="Set up individual modules for AutoGen")
@@ -65,6 +66,9 @@ def test(args):
     # check the existence of the file
     if not os.path.exists(f"test/{filename}.py"):
         raise FileNotFoundError(f"File not found: test/{filename}.py")
+
+    if args.openai_key:
+        os.environ["OPENAI_API_KEY"] = args.openai_key
 
     # load module from test folder, and run the module
     importlib.import_module(f".{filename}", package="test")
